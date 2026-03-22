@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/saradmishra/**)"
+      "Read(//Users/saradmishra/**)",
+      "Bash(node gen_icon.mjs)",
+      "Bash(vsce package:*)",
+      "Bash(code --install-extension /Users/saradmishra/Projects/Secrets-Manager-VScode/secrets-manager-1.0.0.vsix --force)"
     ]
   }
 }

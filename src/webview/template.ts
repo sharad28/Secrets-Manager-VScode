@@ -27,7 +27,7 @@ export function getWebviewContent(): string {
                 <input type="text" id="searchInput" placeholder="Search keys..." oninput="filterKeys()" />
             </div>
 
-            <div id="uncategorizedKeys">
+            <div id="uncategorizedKeys" style="display: none;">
                 <table class="keys-table">
                     <thead>
                         <tr class="keys-table-header">
@@ -41,7 +41,7 @@ export function getWebviewContent(): string {
                 </table>
             </div>
 
-            <div id="noKeys" style="display: none; text-align: center; padding: 20px; color: var(--vscode-descriptionForeground);">
+            <div id="noKeys" style="text-align: center; padding: 20px; color: var(--vscode-descriptionForeground);">
                 No secrets yet. Click <strong>+ Add new secret</strong> below.
             </div>
 

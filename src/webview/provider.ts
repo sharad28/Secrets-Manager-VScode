@@ -233,18 +233,15 @@ export class SecretsManagerWebviewProvider implements vscode.WebviewViewProvider
             ]);
             logger.webview(`Retrieved view state: ${JSON.stringify(viewState)}`);
             
-            // Ensure the webview is still available and visible before sending update
-            if (this._view && this._view.visible) {
+            if (this._view) {
                 logger.webview(`Sending combined update with ${keys.length} keys and ${categories.length} categories`);
-                await this._view.webview.postMessage({ 
-                    command: 'updateKeys', 
+                await this._view.webview.postMessage({
+                    command: 'updateKeys',
                     keys,
                     categories,
                     viewState
                 });
                 logger.webview('Update sent to webview');
-            } else {
-                logger.webview('View no longer visible, update skipped');
             }
         } catch (err) {
             const error = err as Error;

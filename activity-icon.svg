@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Shield shape -->
+  <path d="M12 2 L20 5.5 L20 12 C20 16.5 16.5 20.5 12 22 C7.5 20.5 4 16.5 4 12 L4 5.5 Z"
+        fill="white"/>
+  <!-- Lock body cutout -->
+  <rect x="8.5" y="12" width="7" height="5.5" rx="1" fill="black"/>
+  <!-- Shackle cutout -->
+  <path d="M10 12 L10 9.5 Q10 7.5 12 7.5 Q14 7.5 14 9.5 L14 12"
+        fill="none" stroke="black" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Keyhole dot -->
+  <circle cx="12" cy="14.5" r="1" fill="white"/>
+  <rect x="11.5" y="14.5" width="1" height="1.8" rx="0.5" fill="white"/>
+</svg>

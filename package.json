@@ -2,7 +2,7 @@
     "name": "secrets-manager",
     "displayName": "Secrets Manager",
     "description": "🔒 Manage your API keys and secrets securely in VS Code. Toggle secrets into Jupyter notebooks via IPython startup — no .env files needed.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "sharad28",
     "engines": {
         "vscode": "^1.74.0"
@@ -75,7 +75,7 @@
                 {
                     "id": "secrets-manager",
                     "title": "Secrets Manager",
-                    "icon": "API.png"
+                    "icon": "activity-icon.svg"
                 }
             ]
         },
@@ -112,17 +112,17 @@
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
-        "@types/vscode": "^1.74.0",
         "@types/glob": "^8.0.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "16.x",
+        "@types/vscode": "^1.74.0",
         "@typescript-eslint/eslint-plugin": "^5.45.0",
         "@typescript-eslint/parser": "^5.45.0",
+        "@vscode/test-electron": "^2.2.0",
         "eslint": "^8.28.0",
         "glob": "^8.0.3",
         "mocha": "^10.1.0",
-        "typescript": "^4.9.3",
-        "@vscode/test-electron": "^2.2.0"
+        "typescript": "^4.9.3"
     },
     "repository": {
         "type": "git",

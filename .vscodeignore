@@ -8,5 +8,11 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
-!API.png
+!icon.png
 responses.txt
+node_modules/**
+.claude/**
+icon.svg
+project_plan.md
+out/test/**
+gen_icon.mjs

@@ -1,21 +1,80 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <!-- Background -->
-  <rect width="128" height="128" rx="20" fill="#1e1e2e"/>
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <!-- Shield gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#5b21b6"/>
+    </linearGradient>
+    <!-- Glow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Inner shadow -->
+    <filter id="innerShadow">
+      <feOffset dx="0" dy="1"/>
+      <feGaussianBlur stdDeviation="1" result="offset-blur"/>
+      <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+      <feFlood flood-color="black" flood-opacity="0.3" result="color"/>
+      <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
 
-  <!-- Lock body -->
-  <rect x="34" y="58" width="60" height="46" rx="8" fill="#7c3aed"/>
+  <!-- Background rounded rect -->
+  <rect width="128" height="128" rx="22" fill="url(#bgGrad)"/>
+
+  <!-- Subtle grid lines for depth -->
+  <line x1="0" y1="42" x2="128" y2="42" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+  <line x1="0" y1="85" x2="128" y2="85" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+  <line x1="42" y1="0" x2="42" y2="128" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+  <line x1="85" y1="0" x2="85" y2="128" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+
+  <!-- Shield body -->
+  <path d="M64 14 L96 28 L96 62 C96 82 80 98 64 106 C48 98 32 82 32 62 L32 28 Z"
+        fill="url(#shieldGrad)" filter="url(#glow)"/>
+
+  <!-- Shield inner highlight (top edge) -->
+  <path d="M64 18 L93 31 L93 33 L64 20 L35 33 L35 31 Z"
+        fill="#a78bfa" opacity="0.4"/>
+
+  <!-- Lock body on shield -->
+  <rect x="50" y="62" width="28" height="22" rx="5" fill="#0f0f23"/>
 
   <!-- Lock shackle -->
-  <path d="M44 58V44a20 20 0 0 1 40 0v14" fill="none" stroke="#7c3aed" stroke-width="10" stroke-linecap="round"/>
+  <path d="M56 62 L56 54 Q56 46 64 46 Q72 46 72 54 L72 62"
+        fill="none" stroke="#0f0f23" stroke-width="6" stroke-linecap="round"/>
 
   <!-- Keyhole circle -->
-  <circle cx="64" cy="78" r="8" fill="#1e1e2e"/>
+  <circle cx="64" cy="71" r="4.5" fill="#7c3aed"/>
 
   <!-- Keyhole stem -->
-  <rect x="60" y="78" width="8" height="12" rx="2" fill="#1e1e2e"/>
+  <rect x="62" y="71" width="4" height="7" rx="1.5" fill="#7c3aed"/>
 
-  <!-- Small dots (representing secrets/keys) -->
-  <circle cx="30" cy="20" r="4" fill="#7c3aed" opacity="0.5"/>
-  <circle cx="64" cy="14" r="5" fill="#a78bfa" opacity="0.7"/>
-  <circle cx="98" cy="20" r="4" fill="#7c3aed" opacity="0.5"/>
+  <!-- Small accent dots (bottom corners) -->
+  <circle cx="22" cy="108" r="3" fill="#7c3aed" opacity="0.5"/>
+  <circle cx="106" cy="108" r="3" fill="#7c3aed" opacity="0.5"/>
+
+  <!-- Sparkle top-right -->
+  <g opacity="0.7" filter="url(#glow)">
+    <line x1="102" y1="18" x2="102" y2="26" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+    <line x1="98" y1="22" x2="106" y2="22" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Sparkle top-left -->
+  <g opacity="0.5">
+    <line x1="22" y1="22" x2="22" y2="28" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="19" y1="25" x2="25" y2="25" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
 </svg>
