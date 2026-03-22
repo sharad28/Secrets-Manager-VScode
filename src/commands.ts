@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { StorageManager, CommandRegistry, ViewState } from './types';
 import { SecretsManagerWebviewProvider } from './webview/provider';
-import { populateDemoData } from './test/populate-demo-data';
 import { logger } from './utils/logger';
 import { clearStartupScript } from './jupyter/startupManager';
 
@@ -71,15 +70,6 @@ export function registerCommands(
             }
         },
 
-        'secrets-manager.populateDemoData': async () => {
-            try {
-                await populateDemoData(context);
-                provider.refreshKeys();
-                vscode.window.showInformationMessage('Demo data populated successfully!');
-            } catch (error) {
-                vscode.window.showErrorMessage(`Failed to populate demo data: ${(error as Error).message}`);
-            }
-        },
         'secrets-manager.storeKey': async (key?: string, value?: string) => {
             if (!key || !value) {
                 key = await vscode.window.showInputBox({ 

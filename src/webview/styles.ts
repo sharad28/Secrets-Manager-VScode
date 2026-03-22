@@ -1,8 +1,9 @@
 export const styles = `
     body {
         padding: 10px;
-        color: var(--vscode-foreground);
-        font-family: var(--vscode-font-family);
+        color: var(--vscode-foreground, #cccccc);
+        background: var(--vscode-sideBar-background, #1e1e1e);
+        font-family: var(--vscode-font-family, sans-serif);
     }
 
     /* Quick Actions Toolbar */
@@ -302,7 +303,7 @@ export const styles = `
     }
 
     .section {
-        background: var(--vscode-editor-background);
+        background: var(--vscode-editor-background, #252526);
         padding: 12px;
         border-radius: 4px;
     }

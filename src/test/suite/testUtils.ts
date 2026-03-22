@@ -147,6 +147,19 @@ export class MockMemento implements vscode.Memento {
     }
 }
 
+export class MockWebviewView {
+    webview = {
+        html: '',
+        options: {} as vscode.WebviewOptions,
+        onDidReceiveMessage: (_listener: any) => ({ dispose: () => {} }),
+        postMessage: async (_message: any): Promise<boolean> => true,
+    };
+    visible = true;
+    onDidChangeVisibility = (_listener: any) => ({ dispose: () => {} });
+    onDidDispose = (_listener: any) => ({ dispose: () => {} });
+    show = (_preserveFocus?: boolean) => {};
+}
+
 export class MockSecretStorage implements vscode.SecretStorage {
     private secrets = new Map<string, string>();
 

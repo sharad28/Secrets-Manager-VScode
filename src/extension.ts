@@ -8,9 +8,11 @@ import { updateTerminalEnv } from './jupyter/startupManager';
 let provider: SecretsManagerWebviewProvider | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
-    // Initialize logger
-    logger.initialize(context);
-    logger.command('Secrets Manager extension is now active!');
+    // Initialize logger — failures must not block activation
+    try {
+        logger.initialize(context);
+        logger.command('Secrets Manager extension is now active!');
+    } catch { /* logger failure is non-fatal */ }
 
     try {
         // Initialize storage manager
@@ -19,27 +21,27 @@ export async function activate(context: vscode.ExtensionContext) {
         // Initialize webview provider
         provider = new SecretsManagerWebviewProvider(context.extensionUri, storage, context);
 
-        // Log initial state
-        const keys = await storage.getKeys();
-        const categories = await storage.getCategories();
-        logger.command(`Initial state - Keys: ${keys.length}, Categories: ${categories.length}`);
-
         // Register webview provider
         context.subscriptions.push(
-            vscode.window.registerWebviewViewProvider('secretsManagerView', provider)
+            vscode.window.registerWebviewViewProvider('secretsManagerView', provider, {
+                webviewOptions: { retainContextWhenHidden: true }
+            })
         );
 
         // Register commands
         registerCommands(context, storage, provider);
 
-        // Restore terminal env for any previously active secrets
-        await updateTerminalEnv(context, storage);
+        // Restore terminal env — failure here must not crash the extension
+        try {
+            await updateTerminalEnv(context, storage);
+        } catch (error) {
+            console.error('[Secrets Manager] Failed to restore terminal env:', error);
+        }
 
-        // Log initialization complete
         logger.command('Extension initialization complete');
     } catch (error) {
-        logger.error('Failed to initialize extension', error as Error);
-        vscode.window.showErrorMessage('Failed to initialize Secrets Manager extension');
+        console.error('[Secrets Manager] Activation failed:', error);
+        vscode.window.showErrorMessage(`Secrets Manager: Failed to initialize — ${(error as Error).message}`);
     }
 }
 

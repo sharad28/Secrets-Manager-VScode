@@ -2,7 +2,7 @@
     "name": "secrets-manager",
     "displayName": "Secrets Manager",
     "description": "🔒 Manage your API keys and secrets securely in VS Code. Toggle secrets into Jupyter notebooks via IPython startup — no .env files needed.",
-    "version": "1.0.1",
+    "version": "1.0.9",
     "publisher": "sharad28",
     "engines": {
         "vscode": "^1.74.0"

@@ -15,18 +15,13 @@ class Logger {
         this.write('Logger initialized');
     }
 
-    private ensureInitialized() {
-        if (!this.logFile) {
-            throw new Error('Logger not initialized. Call initialize() first with extension context.');
-        }
-    }
-
     private write(message: string) {
-        this.ensureInitialized();
         const timestamp = new Date().toISOString();
-        const logMessage = `${timestamp} ${message}\n`;
-        fs.appendFileSync(this.logFile!, logMessage);
-        console.log(message);
+        const logMessage = `${timestamp} ${message}`;
+        console.log(logMessage);
+        if (this.logFile) {
+            try { fs.appendFileSync(this.logFile, logMessage + '\n'); } catch {}
+        }
     }
 
     public command(message: string) {
@@ -50,8 +45,7 @@ class Logger {
     }
 
     public getLogPath(): string {
-        this.ensureInitialized();
-        return this.logFile!;
+        return this.logFile || '';
     }
 }
 

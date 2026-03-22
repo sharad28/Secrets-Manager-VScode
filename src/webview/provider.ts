@@ -31,22 +31,35 @@ export class SecretsManagerWebviewProvider implements vscode.WebviewViewProvider
             localResourceRoots: [this.extensionUri]
         };
 
-        webviewView.webview.html = getWebviewContent();
+        // Set HTML immediately — this is what removes the VS Code "Loading" state
+        try {
+            webviewView.webview.html = getWebviewContent();
+        } catch (err) {
+            webviewView.webview.html = `<html><body style="padding:16px;color:var(--vscode-foreground)">
+                <b>Secrets Manager failed to load.</b><br><br>${(err as Error).message}
+            </body></html>`;
+            return;
+        }
 
         this._setWebviewMessageListener(webviewView.webview);
-        
+
         // Initialize view state and keys
         const initializeWebview = async () => {
-            logger.webview('Initializing webview data');
-            await this._updateStoredKeys();
-            
-            // Schedule a follow-up update to ensure data is loaded
-            setTimeout(async () => {
-                if (webviewView.visible) {
-                    logger.webview('Performing follow-up data refresh');
-                    await this._updateStoredKeys();
-                }
-            }, 1000);
+            try {
+                try { logger.webview('Initializing webview data'); } catch {}
+                await this._updateStoredKeys();
+
+                // Follow-up refresh after 1 s — ensures data arrives even if the
+                // first postMessage was sent before the webview iframe was ready.
+                setTimeout(async () => {
+                    if (webviewView.visible) {
+                        try { logger.webview('Performing follow-up data refresh'); } catch {}
+                        await this._updateStoredKeys();
+                    }
+                }, 1000);
+            } catch (err) {
+                console.error('[Secrets Manager] Failed to initialize webview data:', err);
+            }
         };
 
         // Initial load
@@ -55,7 +68,6 @@ export class SecretsManagerWebviewProvider implements vscode.WebviewViewProvider
         // Register webview visibility change handler
         webviewView.onDidChangeVisibility(async () => {
             if (webviewView.visible) {
-                logger.webview('Webview became visible, refreshing data');
                 await initializeWebview();
             }
         });
@@ -233,7 +245,8 @@ export class SecretsManagerWebviewProvider implements vscode.WebviewViewProvider
             ]);
             logger.webview(`Retrieved view state: ${JSON.stringify(viewState)}`);
             
-            if (this._view) {
+            // Ensure the webview is still available AND visible before sending
+            if (this._view && this._view.visible) {
                 logger.webview(`Sending combined update with ${keys.length} keys and ${categories.length} categories`);
                 await this._view.webview.postMessage({
                     command: 'updateKeys',
@@ -242,6 +255,8 @@ export class SecretsManagerWebviewProvider implements vscode.WebviewViewProvider
                     viewState
                 });
                 logger.webview('Update sent to webview');
+            } else {
+                logger.webview('View not visible, update skipped');
             }
         } catch (err) {
             const error = err as Error;
