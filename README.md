@@ -1,12 +1,9 @@
 <p align="center">
-  
-
 <h1 align="center">Secrets Manager</h1>
-
 <p align="center">
   <strong>Manage API keys and secrets securely inside VS Code — stored in your system keychain, injected into Jupyter notebooks and terminals on demand.</strong>
 </p>
-<img width="1080" height="1920" alt="image" src="https://github.com/user-attachments/assets/99150ab3-d69e-4f9d-a27c-9a410b47e64e" />
+
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=sharad28.secrets-manager">
     <img src="https://img.shields.io/visual-studio-marketplace/v/sharad28.secrets-manager?label=VS%20Code%20Marketplace&color=blue&logo=visualstudiocode" alt="Marketplace Version" />
@@ -30,6 +27,7 @@
 ---
 
 <p align="center">
+  <img width="1080" height="1920" alt="image" src="https://github.com/user-attachments/assets/99150ab3-d69e-4f9d-a27c-9a410b47e64e" />
   <img src="image.png" alt="Secrets Manager Screenshot" width="700" />
 </p>
 
