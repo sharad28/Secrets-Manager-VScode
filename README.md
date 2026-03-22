@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="icon.png" alt="Secrets Manager" width="128" height="128" />
-</p>
+  <img width="1080" height="1920" alt="image" src="https://github.com/user-attachments/assets/99150ab3-d69e-4f9d-a27c-9a410b47e64e" />
 
 <h1 align="center">Secrets Manager</h1>
 
