@@ -80,3 +80,7 @@ All files are written with `chmod 600` (owner read/write only) on Mac/Linux.
 ## License
 
 MIT
+
+## Feedback & Issues
+
+Found a bug or have a feature request? [Open an issue](https://github.com/sharad28/secrets-manager-vscode/issues)

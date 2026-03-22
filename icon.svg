@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Background -->
+  <rect width="128" height="128" rx="20" fill="#1e1e2e"/>
+
+  <!-- Lock body -->
+  <rect x="34" y="58" width="60" height="46" rx="8" fill="#7c3aed"/>
+
+  <!-- Lock shackle -->
+  <path d="M44 58V44a20 20 0 0 1 40 0v14" fill="none" stroke="#7c3aed" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Keyhole circle -->
+  <circle cx="64" cy="78" r="8" fill="#1e1e2e"/>
+
+  <!-- Keyhole stem -->
+  <rect x="60" y="78" width="8" height="12" rx="2" fill="#1e1e2e"/>
+
+  <!-- Small dots (representing secrets/keys) -->
+  <circle cx="30" cy="20" r="4" fill="#7c3aed" opacity="0.5"/>
+  <circle cx="64" cy="14" r="5" fill="#a78bfa" opacity="0.7"/>
+  <circle cx="98" cy="20" r="4" fill="#7c3aed" opacity="0.5"/>
+</svg>

@@ -3,7 +3,7 @@
     "displayName": "Secrets Manager",
     "description": "🔒 Manage your API keys and secrets securely in VS Code. Toggle secrets into Jupyter notebooks via IPython startup — no .env files needed.",
     "version": "1.0.0",
-    "publisher": "josephdavidwilsonjr",
+    "publisher": "sharad28",
     "engines": {
         "vscode": "^1.74.0"
     },
@@ -126,12 +126,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/PoliTwit1984/VSCode-API-Vault_Extension.git"
+        "url": "https://github.com/sharad28/secrets-manager-vscode.git"
     },
     "bugs": {
-        "url": "https://github.com/PoliTwit1984/VSCode-API-Vault_Extension/issues"
+        "url": "https://github.com/sharad28/secrets-manager-vscode/issues"
     },
-    "homepage": "https://github.com/PoliTwit1984/VSCode-API-Vault_Extension#readme",
-    "icon": "API.png",
+    "homepage": "https://github.com/sharad28/secrets-manager-vscode#readme",
+    "icon": "icon.png",
     "pricing": "Free"
 }
