@@ -27,8 +27,8 @@
 ---
 
 <p align="center">
-  <img width="1080" height="1920" alt="image" src="https://github.com/user-attachments/assets/99150ab3-d69e-4f9d-a27c-9a410b47e64e" />
-  <img src="image.png" alt="Secrets Manager Screenshot" width="700" />
+  <img width="700" height="1080" alt="image" src="https://github.com/user-attachments/assets/99150ab3-d69e-4f9d-a27c-9a410b47e64e" />
+  
 </p>
 
 ---
