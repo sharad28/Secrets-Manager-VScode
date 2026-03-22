@@ -2,14 +2,16 @@ import * as vscode from 'vscode';
 import { StorageManager, WebviewMessage } from '../types';
 import { getWebviewContent } from './template';
 import { logger } from '../utils/logger';
+import { updateStartupScript, clearStartupScript, updateTerminalEnv, injectIntoExistingTerminals, injectIntoRunningNotebooks } from '../jupyter/startupManager';
 
-export class APIVaultWebviewProvider implements vscode.WebviewViewProvider {
+export class SecretsManagerWebviewProvider implements vscode.WebviewViewProvider {
     private _view?: vscode.WebviewView;
     private _updateTimeout?: NodeJS.Timeout;
 
     constructor(
         private readonly extensionUri: vscode.Uri,
-        private readonly storage: StorageManager
+        private readonly storage: StorageManager,
+        private readonly context: vscode.ExtensionContext
     ) {}
 
     private _debounce(func: Function, wait: number) {
@@ -77,18 +79,22 @@ export class APIVaultWebviewProvider implements vscode.WebviewViewProvider {
         }
     }
 
+    public cleanup(): void {
+        clearStartupScript();
+    }
+
     private async _setWebviewMessageListener(webview: vscode.Webview) {
         webview.onDidReceiveMessage(async (message: WebviewMessage) => {
             try {
                 switch (message.command) {
-                    case 'api-vault.toggleViewMode':
+                    case 'secrets-manager.toggleViewMode':
                         const currentMode = await this.storage.getViewState();
                         await this.storage.updateViewState({
                             mode: currentMode.mode === 'list' ? 'grid' : 'list'
                         });
                         await this._updateStoredKeys();
                         break;
-                    case 'api-vault.toggleCompactMode':
+                    case 'secrets-manager.toggleCompactMode':
                         const currentCompact = await this.storage.getViewState();
                         await this.storage.updateViewState({
                             compact: !currentCompact.compact
@@ -97,8 +103,12 @@ export class APIVaultWebviewProvider implements vscode.WebviewViewProvider {
                         break;
                     case 'storeKey':
                         if (message.key && message.value) {
+                            if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(message.key)) {
+                                vscode.window.showErrorMessage(`Invalid secret name "${message.key}". Use only letters, numbers, and underscores. Must start with a letter or underscore.`);
+                                break;
+                            }
                             await this.storage.storeKey(message.key, message.value, message.category);
-                            vscode.window.showInformationMessage(`API key "${message.key}" stored successfully!`);
+                            vscode.window.showInformationMessage(`Secret "${message.key}" stored successfully!`);
                             webview.postMessage({ command: 'keyStored', key: message.key });
                             await this._updateStoredKeys();
                         }
@@ -174,6 +184,31 @@ export class APIVaultWebviewProvider implements vscode.WebviewViewProvider {
                     case 'refreshKeys':
                         await this._updateStoredKeys();
                         break;
+                    case 'toggleNotebookAccess':
+                        if (message.key) {
+                            await this.storage.toggleNotebookAccess(message.key);
+                            await updateStartupScript(this.storage);
+                            await injectIntoRunningNotebooks(this.storage, message.key);
+                            await this._updateStoredKeys();
+                        }
+                        break;
+                    case 'toggleTerminalAccess':
+                        if (message.key) {
+                            await this.storage.toggleTerminalAccess(message.key);
+                            await updateTerminalEnv(this.context, this.storage);
+                            // Instantly inject/remove in all currently open terminals
+                            await injectIntoExistingTerminals(this.storage, message.key);
+                            await this._updateStoredKeys();
+                        }
+                        break;
+                    case 'clearAllNotebookAccess': {
+                        await this.storage.clearAllNotebookAccess();
+                        // Deletes .env file — watcher detects deletion and clears os.environ
+                        clearStartupScript();
+                        this.context.environmentVariableCollection.clear();
+                        await this._updateStoredKeys();
+                        break;
+                    }
                 }
             } catch (err) {
                 const error = err as Error;

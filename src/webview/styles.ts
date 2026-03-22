@@ -390,4 +390,218 @@ export const styles = `
         border: 2px dashed var(--vscode-focusBorder);
         border-radius: 4px;
     }
+
+    /* ── Notebook Access Toggle (Colab-style) ── */
+    .toggle-cell {
+        width: 42px;
+        padding: 8px 4px 8px 8px !important;
+        vertical-align: middle;
+    }
+
+    .notebook-toggle {
+        position: relative;
+        display: inline-flex;
+        width: 34px;
+        height: 18px;
+        cursor: pointer;
+        flex-shrink: 0;
+        vertical-align: middle;
+    }
+
+    .notebook-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: var(--vscode-input-border, #555);
+        border-radius: 18px;
+        transition: background 0.2s;
+    }
+
+    .toggle-slider::before {
+        content: '';
+        position: absolute;
+        height: 14px;
+        width: 14px;
+        left: 2px;
+        bottom: 2px;
+        background: var(--vscode-editor-background, #fff);
+        border-radius: 50%;
+        transition: transform 0.2s;
+    }
+
+    .notebook-toggle input:checked + .toggle-slider {
+        background: #1a73e8;
+    }
+
+    .notebook-toggle input:checked + .toggle-slider::before {
+        transform: translateX(16px);
+    }
+
+    .notebook-toggle:hover .toggle-slider {
+        filter: brightness(1.2);
+    }
+
+    /* ── Active Keys Status Badge ── */
+    .notebook-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 10px;
+        padding: 6px 10px;
+        background: rgba(26, 115, 232, 0.12);
+        border: 1px solid rgba(26, 115, 232, 0.4);
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    .notebook-status-icon {
+        font-size: 14px;
+    }
+
+    .notebook-status-text {
+        flex: 1;
+        color: var(--vscode-foreground);
+    }
+
+    .notebook-status-clear {
+        background: transparent;
+        color: var(--vscode-descriptionForeground);
+        border: 1px solid var(--vscode-input-border);
+        padding: 2px 6px;
+        font-size: 11px;
+        border-radius: 3px;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .notebook-status-clear:hover {
+        background: var(--vscode-toolbar-hoverBackground);
+        color: var(--vscode-foreground);
+    }
+
+    /* ── Python Snippet Panel ── */
+    .python-snippet {
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: var(--vscode-textBlockQuote-background);
+        border-left: 3px solid #1a73e8;
+        border-radius: 0 4px 4px 0;
+        font-size: 12px;
+    }
+
+    .python-snippet-label {
+        color: var(--vscode-descriptionForeground);
+        margin-bottom: 6px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .python-snippet-code {
+        font-family: var(--vscode-editor-font-family, monospace);
+        font-size: 12px;
+        color: var(--vscode-editor-foreground);
+        line-height: 1.6;
+    }
+
+    .py-kw { color: #569cd6; }
+    .py-str { color: #ce9178; }
+
+    /* ── Colab-style table header ── */
+    .keys-table thead th {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--vscode-descriptionForeground);
+        padding: 6px 8px 8px 8px;
+        border-bottom: 1px solid var(--vscode-input-border);
+        text-align: left;
+    }
+
+    .th-access { width: 110px; }
+    .th-name   { }
+    .th-actions { width: 90px; text-align: right; }
+
+    /* ── Add new secret button (Colab style) ── */
+    .add-secret-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+        padding: 7px 10px;
+        width: 100%;
+        background: transparent;
+        color: #1a73e8;
+        border: 1px dashed rgba(26, 115, 232, 0.5);
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        text-align: left;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    .add-secret-btn:hover {
+        background: rgba(26, 115, 232, 0.08);
+        border-color: #1a73e8;
+        color: #1a73e8;
+    }
+
+    /* ── Inline add form ── */
+    .add-form {
+        margin-top: 6px;
+        padding: 12px;
+        background: var(--vscode-input-background);
+        border: 1px solid var(--vscode-input-border);
+        border-radius: 4px;
+    }
+
+    .form-row {
+        margin-bottom: 8px;
+    }
+
+    .form-row input {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 0;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .btn-save {
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 5px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-save:hover { background: #1558b0; }
+
+    .btn-cancel {
+        background: transparent;
+        color: var(--vscode-descriptionForeground);
+        border: 1px solid var(--vscode-input-border);
+        padding: 5px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-cancel:hover {
+        background: var(--vscode-toolbar-hoverBackground);
+        color: var(--vscode-foreground);
+    }
 `;

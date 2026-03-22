@@ -1,8 +1,8 @@
 {
-    "name": "api-vault",
-    "displayName": "API Vault - Secure Key Manager",
-    "description": "🔒 Your secure API key manager with an intuitive interface right in VS Code. Organize keys in collapsible categories, drag-and-drop management, instant search, and system keychain security.",
-    "version": "4.3.2",
+    "name": "secrets-manager",
+    "displayName": "Secrets Manager",
+    "description": "🔒 Manage your API keys and secrets securely in VS Code. Toggle secrets into Jupyter notebooks via IPython startup — no .env files needed.",
+    "version": "1.0.0",
     "publisher": "josephdavidwilsonjr",
     "engines": {
         "vscode": "^1.74.0"
@@ -28,95 +28,77 @@
         "key vault",
         "authentication",
         "key management",
+        "jupyter",
+        "notebook",
         "development tools",
-        "productivity",
-        "organization",
-        "workspace",
-        "developer tools"
+        "productivity"
     ],
     "galleryBanner": {
         "color": "#1e1e1e",
         "theme": "dark"
     },
-    "badges": [
-        {
-            "url": "https://img.shields.io/badge/security-system%20keychain-brightgreen",
-            "href": "https://github.com/PoliTwit1984/VSCode-API-Vault_Extension",
-            "description": "Uses System Keychain"
-        }
-    ],
     "activationEvents": [],
     "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "api-vault.toggleCompactMode",
-        "title": "API Vault: Toggle Compact Mode",
-        "category": "API Vault",
-        "icon": "$(layout)"
-      },
-      {
-        "command": "api-vault.focusSearch",
-        "title": "API Vault: Focus Search",
-        "category": "API Vault"
-      },
-      {
-        "command": "api-vault.createCategory",
-        "title": "API Vault: Create Category",
-        "category": "API Vault"
-      },
-      {
-        "command": "api-vault.storeKey",
-        "title": "API Vault: Store Key"
-      },
-      {
-        "command": "api-vault.getKey",
-        "title": "API Vault: Get Key"
-      },
-      {
-        "command": "api-vault.listKeys",
-        "title": "API Vault: List Keys"
-      },
-      {
-        "command": "api-vault.populateDemoData",
-        "title": "API Vault: Populate Demo Data"
-      }
-    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "secrets-manager.toggleCompactMode",
+                "title": "Secrets Manager: Toggle Compact Mode",
+                "category": "Secrets Manager",
+                "icon": "$(layout)"
+            },
+            {
+                "command": "secrets-manager.focusSearch",
+                "title": "Secrets Manager: Focus Search",
+                "category": "Secrets Manager"
+            },
+            {
+                "command": "secrets-manager.storeKey",
+                "title": "Secrets Manager: Store Secret"
+            },
+            {
+                "command": "secrets-manager.getKey",
+                "title": "Secrets Manager: Get Secret"
+            },
+            {
+                "command": "secrets-manager.listKeys",
+                "title": "Secrets Manager: List Secrets"
+            },
+            {
+                "command": "secrets-manager.clearAllNotebookAccess",
+                "title": "Secrets Manager: Clear All Notebook Access",
+                "category": "Secrets Manager"
+            }
+        ],
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "api-vault",
-                    "title": "API Vault",
+                    "id": "secrets-manager",
+                    "title": "Secrets Manager",
                     "icon": "API.png"
                 }
-    ],
-    "keybindings": [
-      {
-        "command": "api-vault.toggleCompactMode",
-        "key": "ctrl+shift+c",
-        "mac": "cmd+shift+c",
-        "when": "activeWebviewPanelId == 'apiVaultView'"
-      },
-      {
-        "command": "api-vault.createCategory",
-        "key": "ctrl+shift+n",
-        "mac": "cmd+shift+n",
-        "when": "activeWebviewPanelId == 'apiVaultView'"
-      },
-      {
-        "command": "api-vault.focusSearch",
-        "key": "ctrl+f",
-        "mac": "cmd+f",
-        "when": "activeWebviewPanelId == 'apiVaultView'"
-      }
-    ]
-  },
+            ]
+        },
+        "keybindings": [
+            {
+                "command": "secrets-manager.toggleCompactMode",
+                "key": "ctrl+shift+c",
+                "mac": "cmd+shift+c",
+                "when": "activeWebviewPanelId == 'secretsManagerView'"
+            },
+            {
+                "command": "secrets-manager.focusSearch",
+                "key": "ctrl+f",
+                "mac": "cmd+f",
+                "when": "activeWebviewPanelId == 'secretsManagerView'"
+            }
+        ],
         "views": {
-            "api-vault": [
+            "secrets-manager": [
                 {
                     "type": "webview",
-                    "id": "apiVaultView",
-                    "name": "API Vault"
+                    "id": "secretsManagerView",
+                    "name": "Secrets Manager"
                 }
             ]
         }

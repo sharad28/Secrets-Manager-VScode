@@ -103,6 +103,28 @@ export class MockStorageManager implements StorageManager {
     async updateCategoryStyle(name: string, icon?: string, color?: string) {
         // Mock implementation
     }
+
+    async toggleNotebookAccess(key: string): Promise<void> {
+        this.keyData = this.keyData.map(k => {
+            if (k.name === key) {
+                return { ...k, notebookAccess: !(k.notebookAccess ?? false) };
+            }
+            return k;
+        });
+    }
+
+    async toggleTerminalAccess(key: string): Promise<void> {
+        this.keyData = this.keyData.map(k => {
+            if (k.name === key) {
+                return { ...k, terminalAccess: !(k.terminalAccess ?? false) };
+            }
+            return k;
+        });
+    }
+
+    async clearAllNotebookAccess(): Promise<void> {
+        this.keyData = this.keyData.map(k => ({ ...k, notebookAccess: false }));
+    }
 }
 
 export class MockMemento implements vscode.Memento {

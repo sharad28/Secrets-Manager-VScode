@@ -1,98 +1,82 @@
-# 🔒 API Vault
+# Secrets Manager
 
-**Manage your API keys with style!** API Vault brings a beautiful, intuitive interface right into VS Code, making it easier than ever to organize and access your API keys.
+Manage API keys and secrets securely inside VS Code — stored in your system keychain, injected into Jupyter notebooks and terminals on demand.
 
-![API Vault Demo](api-vault-ui.png)
+## Features
 
-### 🎯 Organized & Secure
-Keep your API keys neatly organized in collapsible categories:
-- 🌥️ Cloud Services (AWS, Azure)
-- 💳 Payment APIs (Stripe, PayPal)
-- 🔗 Social Media (Twitter, Facebook)
-- 🤖 AI & ML (OpenAI, HuggingFace)
-- 🛠️ Development Tools (GitHub, GitLab)
+### Secure storage
+- Secrets are stored in your **system keychain** (Keychain Access on macOS, Credential Manager on Windows, libsecret on Linux)
+- Never stored in plain text, never synced to the cloud
+- Secret names are validated (`letters`, `numbers`, `_` only — must start with a letter or underscore)
 
-## ✨ What's New in 4.3.1
+### Jupyter notebook integration
+- Toggle **Notebook** access per secret — injects into running kernels instantly via the Jupyter extension API
+- An IPython startup watcher script (`~/.ipython/profile_default/startup/00_api_vault.py`) is also installed so secrets are available on every future kernel start without needing a toggle
+- VS Code's `python.envFile` setting is updated to point to `~/.secrets_manager.env` for non-IPython Jupyter kernels
+- If the running kernel can't be reached, a **"Restart Kernel"** notification appears with a one-click action
 
-We've supercharged API Vault with amazing improvements:
+### Terminal integration
+- Toggle **Terminal** access per secret — injects the value into all currently open integrated terminals instantly (no restart needed)
+- New terminals opened later also get the value automatically via `environmentVariableCollection`
+- Toggling OFF immediately runs `unset KEY` / `Remove-Item Env:KEY` in all open terminals
 
-- 🚀 **Lightning-Fast Interface** - Instant key visibility and smoother updates
-- 🎯 **Smart Loading States** - Beautiful loading indicators and empty states
-- 📱 **Enhanced Compact Mode** - More keys at a glance (⌘/Ctrl+Shift+C)
-- ⌨️ **Power User Shortcuts**:
-  - Create categories instantly (⌘/Ctrl+Shift+N)
-  - Quick search access (⌘/Ctrl+F)
-- 🎨 **Polished UI** - Better visual feedback and animations
-- 💾 **Rock-Solid Reliability** - Improved state management and key preservation
-- 🔄 **Seamless Updates** - Optimized refresh handling for a butter-smooth experience
+### UI
+- Google Colab-style table: **Notebook** | **Terminal** | **Name** | **Actions**
+- Show/hide secret value, copy to clipboard, delete with confirmation
+- Search/filter secrets
+- Drag-and-drop to reorder
+- "+ Add new secret" button at the bottom
 
-## 🚀 Features
+## Getting Started
 
-### 🎯 Everything Where You Need It
-- **Access keys instantly** without switching contexts
-- **Copy with one click** directly into your code
-- **Search and filter** to find keys quickly
-- All your keys are **just a keystroke away**
+1. Install the extension
+2. Click the **Secrets Manager** icon in the Activity Bar
+3. Click **+ Add new secret**, enter a name and value, click **Save**
+4. Toggle **Notebook** to inject into Jupyter — toggle **Terminal** to inject into integrated terminals
 
-### 🔐 Bank-Grade Security
-- Keys are stored in your **system's secure keychain**
-- **Zero plain-text storage** - everything is encrypted
-- **No cloud sync** - your keys stay on your machine
-- Follows security best practices
+## How secrets reach your code
 
-### 🎨 Smart Organization
-- **Collapsible categories** for a clean workspace
-- **Drag-and-drop** keys and categories anywhere
-- **Custom categories** for perfect organization
-- **Visual management** that makes sense
+| Destination | How | Restart needed? |
+|---|---|---|
+| Jupyter notebook (running) | Jupyter extension API executes `os.environ['KEY'] = 'VALUE'` directly in the kernel | No |
+| Jupyter notebook (new kernel) | IPython startup script + `python.envFile` `.env` file | No |
+| VS Code integrated terminal (open) | `export KEY=VALUE` sent to all open terminals | No |
+| VS Code integrated terminal (new) | `environmentVariableCollection` | No |
+| Plain Python script / external shell | Source `~/.secrets_manager_env.sh` (Mac/Linux) or `~/.secrets_manager_env.ps1` (Windows) | N/A |
 
-### 🚀 Perfect Integration
-- **Native VS Code UI** - feels right at home
-- **Keyboard shortcuts** for power users
-- **Command palette** integration
-- **Explorer view** for quick access
+## Files written to disk
 
-## 🎮 Getting Started
+| File | Purpose |
+|---|---|
+| `~/.ipython/profile_default/startup/00_api_vault.py` | IPython startup watcher — polls `~/.secrets_manager.env` every second and keeps `os.environ` in sync |
+| `~/.secrets_manager.env` | Current active notebook secrets in `.env` format |
+| `~/.secrets_manager_env.sh` / `.ps1` | Shell export file for manual sourcing |
 
-1. Install API Vault from the VS Code Marketplace
-2. Click the vault icon in the Activity Bar
-3. Start adding your API keys!
+All files are written with `chmod 600` (owner read/write only) on Mac/Linux.
 
-## ⌨️ Commands
+## Commands
 
-- `API Vault: Store Key` - Add a new API key
-- `API Vault: Get Key` - Retrieve and copy a key
-- `API Vault: List Keys` - View all stored keys
+| Command | Description |
+|---|---|
+| `Secrets Manager: Store Key` | Add a new secret |
+| `Secrets Manager: Get Key` | Retrieve and copy a secret |
+| `Secrets Manager: List Keys` | Open the Secrets Manager panel |
+| `Secrets Manager: Focus Search` | Focus the search input (`Ctrl/Cmd+F`) |
 
-## 🛡️ Security
+## Security
 
-API Vault uses your system's secure keychain (Keychain Access on macOS, Credential Manager on Windows, libsecret on Linux) to store your API keys. The keys are:
+- Secrets are encrypted at rest in the OS keychain
+- Input validation prevents injection attacks in secret names
+- Webview uses a strict Content Security Policy
+- Secret values are HTML-escaped before rendering
+- All generated files are `chmod 600` on Mac/Linux
 
-- ✅ **Encrypted at rest**
-- ✅ **Protected by your system's security**
-- ✅ **Never stored in plain text**
-- ✅ **Never synced to the cloud**
+## Requirements
 
-## 🎯 Perfect For
+- VS Code 1.70+
+- For Jupyter notebook injection: [Jupyter extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) (`ms-toolsai.jupyter`)
+- For IPython auto-watcher: IPython installed in your Python environment (`pip install ipython`)
 
-- **Developers** managing multiple API keys
-- **Teams** working with various services
-- **Students** learning to use APIs
-- **Anyone** who values security and convenience
+## License
 
-## 📝 Feedback & Contributions
-
-Love API Vault? Give it a ⭐️ on GitHub! Found a bug or have a feature request? [Open an issue](https://github.com/PoliTwit1984/VSCode-API-Vault_Extension/issues)!
-
-## 🌟 Share the Love
-
-If API Vault has made your development workflow easier, consider sharing it with your fellow developers:
-- Share on [Twitter](https://twitter.com/intent/tweet?text=Check%20out%20API%20Vault%20for%20VS%20Code!%20The%20most%20beautiful%20and%20secure%20way%20to%20manage%20your%20API%20keys%20right%20in%20your%20editor%20%F0%9F%94%90%20https://marketplace.visualstudio.com/items?itemName=PoliTwit1984.api-vault)
-- Share on [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https://marketplace.visualstudio.com/items?itemName=PoliTwit1984.api-vault)
-- Tell your team about it!
-
-Every share helps more developers discover a better way to manage their API keys.
-
-## 📜 License
-
-MIT License - feel free to use in your own projects!
+MIT

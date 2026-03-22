@@ -1,6 +1,8 @@
 export interface KeyData {
     name: string;
     category?: string;
+    notebookAccess?: boolean;
+    terminalAccess?: boolean;
 }
 
 export interface CategoryData {
@@ -17,7 +19,7 @@ export interface ViewState {
 }
 
 export interface WebviewMessage {
-    command: 'api-vault.toggleViewMode' | 'api-vault.toggleCompactMode' | 'storeKey' | 'getKey' | 'copyKey' | 'updateOrder' | 'createCategory' | 'deleteCategory' | 'updateKeyCategory' | 'toggleCategory' | 'confirmDelete' | 'refreshKeys' | 'updateKeys' | 'keyStored' | 'showKey' | 'deleteSuccess' | 'deleteCancelled' | 'deleteFailed' | 'focusSearch';
+    command: 'secrets-manager.toggleViewMode' | 'secrets-manager.toggleCompactMode' | 'storeKey' | 'getKey' | 'copyKey' | 'updateOrder' | 'createCategory' | 'deleteCategory' | 'updateKeyCategory' | 'toggleCategory' | 'confirmDelete' | 'refreshKeys' | 'updateKeys' | 'keyStored' | 'showKey' | 'deleteSuccess' | 'deleteCancelled' | 'deleteFailed' | 'focusSearch' | 'toggleNotebookAccess' | 'toggleTerminalAccess' | 'clearAllNotebookAccess';
     key?: string;
     value?: string;
     category?: string;
@@ -43,6 +45,9 @@ export interface StorageManager {
     getViewState(): Promise<ViewState>;
     updateViewState(newState: Partial<ViewState>): Promise<void>;
     updateCategoryStyle(name: string, icon?: string, color?: string): Promise<void>;
+    toggleNotebookAccess(key: string): Promise<void>;
+    toggleTerminalAccess(key: string): Promise<void>;
+    clearAllNotebookAccess(): Promise<void>;
 }
 
 export type CommandHandler = (...args: any[]) => Promise<void>;

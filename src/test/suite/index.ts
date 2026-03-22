@@ -14,7 +14,7 @@ export async function run(): Promise<void> {
 	const testsRoot = path.resolve(__dirname, '.');
 
 	// Get the extension context
-	const extension = vscode.extensions.getExtension('JosephDavidWilsonJr.api-vault');
+	const extension = vscode.extensions.getExtension('JosephDavidWilsonJr.secrets-manager');
 	if (extension) {
 		await extension.activate();
 		(global as any).testContext = (extension as any)._extensionContext;

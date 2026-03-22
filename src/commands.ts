@@ -1,17 +1,18 @@
 import * as vscode from 'vscode';
 import { StorageManager, CommandRegistry, ViewState } from './types';
-import { APIVaultWebviewProvider } from './webview/provider';
+import { SecretsManagerWebviewProvider } from './webview/provider';
 import { populateDemoData } from './test/populate-demo-data';
 import { logger } from './utils/logger';
+import { clearStartupScript } from './jupyter/startupManager';
 
 export function registerCommands(
     context: vscode.ExtensionContext,
     storage: StorageManager,
-    provider: APIVaultWebviewProvider
+    provider: SecretsManagerWebviewProvider
 ): void {
 
     const commands: CommandRegistry = {
-        'api-vault.toggleViewMode': async () => {
+        'secrets-manager.toggleViewMode': async () => {
             try {
                 const viewState = await storage.getViewState();
                 logger.command(`Toggling view mode. Current state: ${JSON.stringify(viewState)}`);
@@ -33,7 +34,7 @@ export function registerCommands(
             }
         },
 
-        'api-vault.toggleCompactMode': async () => {
+        'secrets-manager.toggleCompactMode': async () => {
             try {
                 const viewState = await storage.getViewState();
                 logger.command(`Toggling compact mode. Current state: ${JSON.stringify(viewState)}`);
@@ -55,11 +56,11 @@ export function registerCommands(
             }
         },
 
-        'api-vault.focusSearch': async () => {
+        'secrets-manager.focusSearch': async () => {
             provider.focusSearch();
         },
 
-        'api-vault.createCategory': async () => {
+        'secrets-manager.createCategory': async () => {
             const name = await vscode.window.showInputBox({
                 prompt: 'Enter category name',
                 placeHolder: 'e.g., Cloud Services'
@@ -70,7 +71,7 @@ export function registerCommands(
             }
         },
 
-        'api-vault.populateDemoData': async () => {
+        'secrets-manager.populateDemoData': async () => {
             try {
                 await populateDemoData(context);
                 provider.refreshKeys();
@@ -79,7 +80,7 @@ export function registerCommands(
                 vscode.window.showErrorMessage(`Failed to populate demo data: ${(error as Error).message}`);
             }
         },
-        'api-vault.storeKey': async (key?: string, value?: string) => {
+        'secrets-manager.storeKey': async (key?: string, value?: string) => {
             if (!key || !value) {
                 key = await vscode.window.showInputBox({ 
                     prompt: 'Enter the key name',
@@ -100,7 +101,7 @@ export function registerCommands(
             vscode.window.showInformationMessage(`API key "${key}" stored successfully!`);
         },
 
-        'api-vault.getKey': async (key?: string) => {
+        'secrets-manager.getKey': async (key?: string) => {
             if (!key) {
                 const keys = await storage.getKeys();
                 
@@ -125,7 +126,14 @@ export function registerCommands(
             vscode.window.showInformationMessage(`API key "${key}" copied to clipboard!`);
         },
 
-        'api-vault.listKeys': async () => {
+        'secrets-manager.clearAllNotebookAccess': async () => {
+            await storage.clearAllNotebookAccess();
+            clearStartupScript();
+            provider.refreshKeys();
+            vscode.window.showInformationMessage('All notebook access cleared. Secrets will no longer be injected into kernels.');
+        },
+
+        'secrets-manager.listKeys': async () => {
             const keys = await storage.getKeys();
             
             if (keys.length === 0) {
@@ -143,7 +151,7 @@ export function registerCommands(
                 });
 
                 if (action === 'Copy to Clipboard') {
-                    await commands['api-vault.getKey'](selectedKey);
+                    await commands['secrets-manager.getKey'](selectedKey);
                 } else if (action === 'Delete Key') {
                     await storage.deleteKey(selectedKey);
                     provider.refreshKeys();

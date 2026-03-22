@@ -58,11 +58,11 @@ export class VSCodeStorageManager implements StorageManager {
         // Update existing key or add new one
         const existingKeyIndex = keys.findIndex(k => k.name === key);
         if (existingKeyIndex !== -1) {
-            // Update existing key's category
+            // Update existing key's category, preserve notebookAccess
             keys[existingKeyIndex].category = category;
         } else {
-            // Add new key
-            keys.push({ name: key, category });
+            // Add new key with notebookAccess defaulting to false
+            keys.push({ name: key, category, notebookAccess: false });
         }
         await this.globalState.update('api-vault-keys', keys);
         logger.storage(`Stored key: ${key} with category: ${category || 'none'}`);
@@ -212,5 +212,37 @@ export class VSCodeStorageManager implements StorageManager {
 
     async getValue(key: string): Promise<string | undefined> {
         return await this.secretStorage.get(key);
+    }
+
+    async toggleNotebookAccess(key: string): Promise<void> {
+        const keys = await this.getKeys();
+        const updatedKeys = keys.map(k => {
+            if (k.name === key) {
+                const current = k.notebookAccess ?? false;
+                return { ...k, notebookAccess: !current };
+            }
+            return k;
+        });
+        await this.globalState.update('api-vault-keys', updatedKeys);
+        logger.storage(`Toggled notebook access for: ${key}`);
+    }
+
+    async toggleTerminalAccess(key: string): Promise<void> {
+        const keys = await this.getKeys();
+        const updatedKeys = keys.map(k => {
+            if (k.name === key) {
+                return { ...k, terminalAccess: !(k.terminalAccess ?? false) };
+            }
+            return k;
+        });
+        await this.globalState.update('api-vault-keys', updatedKeys);
+        logger.storage(`Toggled terminal access for: ${key}`);
+    }
+
+    async clearAllNotebookAccess(): Promise<void> {
+        const keys = await this.getKeys();
+        const updatedKeys = keys.map(k => ({ ...k, notebookAccess: false }));
+        await this.globalState.update('api-vault-keys', updatedKeys);
+        logger.storage('Cleared all notebook access');
     }
 }

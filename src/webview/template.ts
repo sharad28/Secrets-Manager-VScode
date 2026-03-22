@@ -1,5 +1,5 @@
 import { styles } from './styles';
-import { getKeyRowHtml, getQuickActionsHtml, getKeyFormHtml, getCategoryHeaderHtml, getKeyboardShortcutsHtml } from './components';
+import { getKeyRowHtml, getNotebookStatusHtml, getPythonSnippetHtml } from './components';
 import { createHandlers } from './handlers';
 import { createMessageHandlers } from './messageHandlers';
 
@@ -9,46 +9,59 @@ export function getWebviewContent(): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Vault</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
+    <title>Secrets Manager</title>
     <style>${styles}</style>
 </head>
 <body>
     <div class="container">
         <div class="section">
-            ${getQuickActionsHtml()}
-            ${getKeyFormHtml()}
+
+            ${getNotebookStatusHtml()}
 
             <div class="sync-info">
-                ℹ️ Key names and categories are synced across VS Code instances. Values remain secure in your system keychain.
+                ℹ️ Stored in system keychain. Toggles inject/remove secrets instantly — no restart needed.
             </div>
-            
+
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search keys..." oninput="filterKeys()" />
             </div>
 
-            <div class="category-actions">
-                <input type="text" id="newCategory" placeholder="New category name" class="category-input" />
-                <button onclick="createCategory()">Add Category</button>
-            </div>
-            
-            <div id="categorizedKeys"></div>
-            
-            <div id="uncategorizedKeys" class="category-section" data-category="uncategorized">
-                ${getCategoryHeaderHtml('Uncategorized', true)}
-                <div class="category-content expanded">
-                    <table class="keys-table">
-                        <tbody id="keysList">
-                            <tr><td colspan="2">Loading keys...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div id="uncategorizedKeys">
+                <table class="keys-table">
+                    <thead>
+                        <tr class="keys-table-header">
+                            <th class="th-access">Notebook</th>
+                            <th class="th-access">Terminal</th>
+                            <th class="th-name">Name</th>
+                            <th class="th-actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keysList"></tbody>
+                </table>
             </div>
 
             <div id="noKeys" style="display: none; text-align: center; padding: 20px; color: var(--vscode-descriptionForeground);">
-                No API keys stored yet. Click the + button to add one.
+                No secrets yet. Click <strong>+ Add new secret</strong> below.
             </div>
 
-            ${getKeyboardShortcutsHtml()}
+            <div id="keyForm" class="add-form" style="display:none;">
+                <div class="form-row">
+                    <input type="text" id="keyName" placeholder="Secret name (e.g. OPENAI_API_KEY)" />
+                </div>
+                <div class="form-row">
+                    <input type="password" id="apiKey" placeholder="Value" />
+                </div>
+                <div class="form-actions">
+                    <button class="btn-save" onclick="storeKey()">Save</button>
+                    <button class="btn-cancel" onclick="document.getElementById('keyForm').style.display='none'">Cancel</button>
+                </div>
+                <div id="successMessage" class="success-message"></div>
+            </div>
+
+            <button class="add-secret-btn" onclick="showNewKeyForm()">+ Add new secret</button>
+
+            ${getPythonSnippetHtml()}
         </div>
     </div>
 
@@ -109,15 +122,14 @@ export function getWebviewContent(): string {
         // Expose handlers to HTML
         window.showNewKeyForm = handlers.showNewKeyForm;
         window.toggleCompactMode = handlers.toggleCompactMode;
-        window.createCategory = handlers.createCategory;
-        window.deleteCategory = handlers.deleteCategory;
-        window.updateKeyCategory = handlers.updateKeyCategory;
-        window.toggleCategory = handlers.toggleCategory;
         window.storeKey = handlers.storeKey;
         window.filterKeys = handlers.filterKeys;
         window.toggleKey = handlers.toggleKey;
         window.copyKey = handlers.copyKey;
         window.deleteKey = handlers.deleteKey;
+        window.toggleNotebookAccess = handlers.toggleNotebookAccess;
+        window.toggleTerminalAccess = handlers.toggleTerminalAccess;
+        window.clearAllNotebookAccess = handlers.clearAllNotebookAccess;
     </script>
 </body>
 </html>`;

@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { MockStorageManager, MockMemento, MockSecretStorage } from './testUtils';
 import { VSCodeStorageManager } from '../../storage';
-import { APIVaultWebviewProvider } from '../../webview/provider';
+import { SecretsManagerWebviewProvider } from '../../webview/provider';
 
 suite('API Vault Extension Test Suite', () => {
     let storage: VSCodeStorageManager;

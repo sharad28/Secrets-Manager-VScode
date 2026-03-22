@@ -1,22 +1,23 @@
 import * as vscode from 'vscode';
 import { VSCodeStorageManager } from './storage';
-import { APIVaultWebviewProvider } from './webview/provider';
+import { SecretsManagerWebviewProvider } from './webview/provider';
 import { registerCommands } from './commands';
 import { logger } from './utils/logger';
+import { updateTerminalEnv } from './jupyter/startupManager';
 
-let provider: APIVaultWebviewProvider | undefined;
+let provider: SecretsManagerWebviewProvider | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
     // Initialize logger
     logger.initialize(context);
-    logger.command('API Vault extension is now active!');
+    logger.command('Secrets Manager extension is now active!');
 
     try {
         // Initialize storage manager
         const storage = await VSCodeStorageManager.create(context.secrets, context.globalState);
 
         // Initialize webview provider
-        provider = new APIVaultWebviewProvider(context.extensionUri, storage);
+        provider = new SecretsManagerWebviewProvider(context.extensionUri, storage, context);
 
         // Log initial state
         const keys = await storage.getKeys();
@@ -25,20 +26,24 @@ export async function activate(context: vscode.ExtensionContext) {
 
         // Register webview provider
         context.subscriptions.push(
-            vscode.window.registerWebviewViewProvider('apiVaultView', provider)
+            vscode.window.registerWebviewViewProvider('secretsManagerView', provider)
         );
 
         // Register commands
         registerCommands(context, storage, provider);
 
+        // Restore terminal env for any previously active secrets
+        await updateTerminalEnv(context, storage);
+
         // Log initialization complete
         logger.command('Extension initialization complete');
     } catch (error) {
         logger.error('Failed to initialize extension', error as Error);
-        vscode.window.showErrorMessage('Failed to initialize API Vault extension');
+        vscode.window.showErrorMessage('Failed to initialize Secrets Manager extension');
     }
 }
 
 export function deactivate() {
+    provider?.cleanup();
     provider = undefined;
 }
