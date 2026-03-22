@@ -126,12 +126,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/sharad28/secrets-manager-vscode.git"
+        "url": "https://github.com/sharad28/Secrets-Manager-VScode.git"
     },
     "bugs": {
-        "url": "https://github.com/sharad28/secrets-manager-vscode/issues"
+        "url": "https://github.com/sharad28/Secrets-Manager-VScode/issues"
     },
-    "homepage": "https://github.com/sharad28/secrets-manager-vscode#readme",
+    "homepage": "https://github.com/sharad28/Secrets-Manager-VScode#readme",
     "icon": "icon.png",
     "pricing": "Free"
 }
